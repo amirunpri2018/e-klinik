@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'dropdown_formfield.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'formulir_pasien.dart';
 // For changing the language
 // import 'package:flutter_localizations/flutter_localizations.dart';
 // import 'package:dropdown_formfield/dropdown_formfield.dart';
@@ -25,15 +26,23 @@ class RegistrasiPasien extends StatefulWidget {
 }
 
 class _RegistrasiPasienState extends State<RegistrasiPasien> {
+  final items = List<String>.generate(20, (i) => "Item ${i + 1}"); // list for swipe
+  // final items = [
+  //   'aldi',
+  //   'aldi',
+  //   'aldi',
+  //   'aldi',
+  //   'aldi',
+  //   'aldi',
+  //   'aldi',
+
+  // ];
 
   String _myActivity;
   // String _myActivityResult;
   final formKey = new GlobalKey<FormState>();
   bool cetakKartu = false;
   bool tanpaBiayaAwal = false;
-
-  final items = List<String>.generate(20, (i) => "Item ${i + 1}");
-
 
   @override
   void initState() {
@@ -50,7 +59,7 @@ class _RegistrasiPasienState extends State<RegistrasiPasien> {
       floatingActionButton: FloatingActionButton(onPressed: (){
          Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyHomePage()),
+          MaterialPageRoute(builder: (context) => PasienForm()),
         );
       },child: Icon(Icons.add)),
       body: ListView(
@@ -124,6 +133,38 @@ class _RegistrasiPasienState extends State<RegistrasiPasien> {
                     )
                   ]
                   ),
+            ListView.builder(
+              // to allow listview builder inside listview
+            shrinkWrap: true, 
+            physics: ClampingScrollPhysics(),
+
+            //  end off allow listview builder inside listview
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final item = items[index];
+
+              return Dismissible(
+                // Each Dismissible must contain a Key. Keys allow Flutter to
+                // uniquely identify widgets.
+                key: Key(item),
+                // Provide a function that tells the app
+                // what to do after an item has been swiped away.
+                onDismissed: (direction) {
+                  // Remove the item from the data source.
+                  setState(() {
+                    items.removeAt(index);
+                  });
+
+                  // Then show a snackbar.
+                  Scaffold.of(context)
+                      .showSnackBar(SnackBar(content: Text("$item dismissed")));
+                },
+                // Show a red background as the item is swiped away.
+                background: Container(color: Colors.red),
+                child: ListTile(title: Text('$item')),
+              );
+            },
+          ),
         ],
       )
     );
