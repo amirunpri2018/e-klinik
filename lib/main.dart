@@ -5,6 +5,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'dropdown_formfield.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'formulir_pasien.dart';
+import 'daftar_ulang_pasien.dart';
 // For changing the language
 // import 'package:flutter_localizations/flutter_localizations.dart';
 // import 'package:dropdown_formfield/dropdown_formfield.dart';
@@ -26,17 +27,17 @@ class RegistrasiPasien extends StatefulWidget {
 }
 
 class _RegistrasiPasienState extends State<RegistrasiPasien> {
-  final items = List<String>.generate(20, (i) => "Item ${i + 1}"); // list for swipe
-  // final items = [
-  //   'aldi',
-  //   'aldi',
-  //   'aldi',
-  //   'aldi',
-  //   'aldi',
-  //   'aldi',
-  //   'aldi',
+  // final items = List<String>.generate(20, (i) => "Item ${i + 1}"); // list for swipe
+  final items = [
+    '10923821 Aldi Hadistian',
+    '12093812 Aldi Hadistian',
+    '12983091 Aldi Hadistian',
+    '12893721 Aldi Hadistian',
+    '10928302 Aldi Hadistian',
+    '12398192 Aldi Hadistian',
+    '10298320 Aldi Hadistian',
 
-  // ];
+  ];
 
   String _myActivity;
   // String _myActivityResult;
@@ -133,38 +134,63 @@ class _RegistrasiPasienState extends State<RegistrasiPasien> {
                     )
                   ]
                   ),
+                  // new Row(children: <Widget>[
+                  //   new Text('No. '),
+                  //   new Text('')
+                  // ],
             ListView.builder(
-              // to allow listview builder inside listview
-            shrinkWrap: true, 
-            physics: ClampingScrollPhysics(),
-
-            //  end off allow listview builder inside listview
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              final item = items[index];
-
-              return Dismissible(
-                // Each Dismissible must contain a Key. Keys allow Flutter to
-                // uniquely identify widgets.
-                key: Key(item),
-                // Provide a function that tells the app
-                // what to do after an item has been swiped away.
-                onDismissed: (direction) {
-                  // Remove the item from the data source.
-                  setState(() {
-                    items.removeAt(index);
-                  });
-
-                  // Then show a snackbar.
-                  Scaffold.of(context)
-                      .showSnackBar(SnackBar(content: Text("$item dismissed")));
-                },
-                // Show a red background as the item is swiped away.
-                background: Container(color: Colors.red),
-                child: ListTile(title: Text('$item')),
-              );
-            },
-          ),
+              shrinkWrap: true, 
+              physics: ClampingScrollPhysics(),
+              itemCount: 100,
+              itemBuilder: (context, index) {
+                return Slidable(
+                  key: ValueKey(index),
+                  actionPane: SlidableDrawerActionPane(),
+                  // actions: <Widget>[
+                  //   IconSlideAction(
+                  //     caption: 'Archive',
+                  //     color: Colors.blue,
+                  //     icon: Icons.archive,
+                  //   ),
+                  //   IconSlideAction(
+                  //     caption: 'Share',
+                  //     color: Colors.indigo,
+                  //     icon: Icons.share,
+                  //   ),
+                  // ],
+                  secondaryActions: <Widget>[
+                    // IconSlideAction(
+                    //   caption: 'Edit',
+                    //   color: Colors.grey.shade200,
+                    //   icon: Icons.edit,
+                    //   onTap: (){
+                    //      Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(builder: (context) => Home()),
+                    //     );
+                    //   },
+                    // ),
+                    IconSlideAction(
+                      caption: 'Delete',
+                      color: Colors.red,
+                      icon: Icons.delete,
+                    ),
+                  ],
+                  dismissal: SlidableDismissal(
+                    child: SlidableDrawerDismissal(),
+                  ),
+                  child: ListTile(
+                    title: Text('$index'),
+                    onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Home()),
+                        );
+                    },
+                  ),
+                );
+              },
+            ),
         ],
       )
     );
@@ -174,375 +200,6 @@ class _RegistrasiPasienState extends State<RegistrasiPasien> {
 
 
 
-
-
-class MyHomePage extends StatefulWidget {
-  @override
-  MyHomePageState createState() => MyHomePageState();
-}
-
-class MyHomePageState extends State<MyHomePage> {
-  int pilihOpsi;
-  String _myActivity;
-  // String _myActivityResult;
-  final formKey = new GlobalKey<FormState>();
-  bool cetakKartu = false;
-  bool tanpaBiayaAwal = false;
-
-  setPilihOpsi(int val) {
-    setState(() {
-      pilihOpsi = val;
-      
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _myActivity = '';
-    // _myActivityResult = '';
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text(appName)),
-        body: ListView(
-          padding: EdgeInsets.all(24),
-          children: <Widget>[
-              Text('Jenis Kunjungan'),
-              Row(children: <Widget>[
-                          Radio(
-                            value: 1,
-                            groupValue: pilihOpsi,
-                            activeColor: Colors.green,
-                            onChanged: (val) {
-                              print("Lama");
-                              setPilihOpsi(val);
-                            },
-                          ),
-                          Text('Lama'),
-                          Radio(
-                            value: 2,
-                            groupValue: pilihOpsi,
-                            activeColor: Colors.green,
-                            onChanged: (val) {
-                              print("Baru");
-                              setPilihOpsi(val);
-                            },
-                          ),
-                          Text('Baru')
-                    ],),
-              Text('Tgl Kunjungan'),
-              DateTimeForm(),
-              
-              Text('CARA BAYAR'),
-              // Dropdown
-              DropDownFormField(
-                  // titleText: 'My workout',
-                  hintText: 'Please choose one',
-                  value: _myActivity,
-                  onSaved: (value) {
-                    setState(() {
-                      _myActivity = value;
-                    });
-                  },
-                  onChanged: (value) {
-                    setState(() {
-                      _myActivity = value;
-                    });
-                  },
-                  dataSource: [
-                    {
-                      "display": "Running",
-                      "value": "Running",
-                    },
-                    {
-                      "display": "Climbing",
-                      "value": "Climbing",
-                    },
-                    {
-                      "display": "Walking",
-                      "value": "Walking",
-                    },
-                    {
-                      "display": "Swimming",
-                      "value": "Swimming",
-                    },
-                    {
-                      "display": "Soccer Practice",
-                      "value": "Soccer Practice",
-                    },
-                    {
-                      "display": "Baseball Practice",
-                      "value": "Baseball Practice",
-                    },
-                    {
-                      "display": "Football Practice",
-                      "value": "Football Practice",
-                    },
-                  ],
-                  textField: 'display',
-                  valueField: 'value',
-                ),
-
-              Text('TUJUAN POLIKLINIK'),
-              // Dropdown
-              DropDownFormField(
-                  // titleText: 'My workout',
-                  hintText: 'Please choose one',
-                  value: _myActivity,
-                  onSaved: (value) {
-                    setState(() {
-                      _myActivity = value;
-                    });
-                  },
-                  onChanged: (value) {
-                    setState(() {
-                      _myActivity = value;
-                    });
-                  },
-                  dataSource: [
-                    {
-                      "display": "Running",
-                      "value": "Running",
-                    },
-                    {
-                      "display": "Climbing",
-                      "value": "Climbing",
-                    },
-                    {
-                      "display": "Walking",
-                      "value": "Walking",
-                    },
-                    {
-                      "display": "Swimming",
-                      "value": "Swimming",
-                    },
-                    {
-                      "display": "Soccer Practice",
-                      "value": "Soccer Practice",
-                    },
-                    {
-                      "display": "Baseball Practice",
-                      "value": "Baseball Practice",
-                    },
-                    {
-                      "display": "Football Practice",
-                      "value": "Football Practice",
-                    },
-                  ],
-                  textField: 'display',
-                  valueField: 'value',
-                ),
-
-              Text('DOKTER'),
-              // Dropdown
-              DropDownFormField(
-                  // titleText: 'My workout',
-                  hintText: 'Please choose one',
-                  value: _myActivity,
-                  onSaved: (value) {
-                    setState(() {
-                      _myActivity = value;
-                    });
-                  },
-                  onChanged: (value) {
-                    setState(() {
-                      _myActivity = value;
-                    });
-                  },
-                  dataSource: [
-                    {
-                      "display": "Running",
-                      "value": "Running",
-                    },
-                    {
-                      "display": "Climbing",
-                      "value": "Climbing",
-                    },
-                    {
-                      "display": "Walking",
-                      "value": "Walking",
-                    },
-                    {
-                      "display": "Swimming",
-                      "value": "Swimming",
-                    },
-                    {
-                      "display": "Soccer Practice",
-                      "value": "Soccer Practice",
-                    },
-                    {
-                      "display": "Baseball Practice",
-                      "value": "Baseball Practice",
-                    },
-                    {
-                      "display": "Football Practice",
-                      "value": "Football Practice",
-                    },
-                  ],
-                  textField: 'display',
-                  valueField: 'value',
-                ),
-              Text('KELAS RAWAT'),
-              // Dropdown
-              DropDownFormField(
-                  // titleText: 'My workout',
-                  hintText: 'Please choose one',
-                  value: _myActivity,
-                  onSaved: (value) {
-                    setState(() {
-                      _myActivity = value;
-                    });
-                  },
-                  onChanged: (value) {
-                    setState(() {
-                      _myActivity = value;
-                    });
-                  },
-                  dataSource: [
-                    {
-                      "display": "Running",
-                      "value": "Running",
-                    },
-                    {
-                      "display": "Climbing",
-                      "value": "Climbing",
-                    },
-                    {
-                      "display": "Walking",
-                      "value": "Walking",
-                    },
-                    {
-                      "display": "Swimming",
-                      "value": "Swimming",
-                    },
-                    {
-                      "display": "Soccer Practice",
-                      "value": "Soccer Practice",
-                    },
-                    {
-                      "display": "Baseball Practice",
-                      "value": "Baseball Practice",
-                    },
-                    {
-                      "display": "Football Practice",
-                      "value": "Football Practice",
-                    },
-                  ],
-                  textField: 'display',
-                  valueField: 'value',
-                ),
-                Text('CATATAN'),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Catatan'
-                  ),
-                ),
-                Row(children: <Widget>[
-                   Checkbox(
-                    value: cetakKartu,
-                    onChanged: (bool value) {
-                        setState(() {
-                            cetakKartu = value;
-                        });
-                    },
-                ),
-                Text('Cetak Kartu')
-                ],),
-                 Row(children: <Widget>[
-                   Checkbox(
-                    value: tanpaBiayaAwal,
-                    onChanged: (bool value) {
-                        setState(() {
-                            tanpaBiayaAwal = value;
-                        });
-                    },
-                ),
-                Text('Tanpa Biaya Awal *)')
-                ],),
-                Text('* Hanya Untuk Pasien yang tidak terkena biaya seperti Buka Jahitan'),
-                Row(children: <Widget>[
-                new Container(
-                  margin: const EdgeInsets.only(top:15.0,right: 10.0),
-                  child:
-                      RaisedButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'Reset',
-                          style: TextStyle(fontSize: 20)
-                        ),
-                      ),
-                  
-                ),
-               new Container(
-                  margin: const EdgeInsets.only(top:15.0,right: 10.0),
-                  child:
-                      RaisedButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'Simpan',
-                          style: TextStyle(fontSize: 20)
-                        ),
-                      ),
-                  
-                ),
-
-                ],)
-          ],
-        ));
-  }
-}
-
-// Date Picker
-class DateTimeForm extends StatefulWidget {
-  @override
-  _DateTimeFormState createState() => _DateTimeFormState();
-}
-
-
-class _DateTimeFormState extends State<DateTimeForm> {
-  final formKey = GlobalKey<FormState>();
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          BasicDateField(),
-          SizedBox(height: 24),
-        ],
-      ),
-    );
-  }
-}
-
-class BasicDateField extends StatelessWidget {
-  final format = DateFormat("yyyy-MM-dd");
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      // Text('Basic date field (${format.pattern})',textAlign: TextAlign.right,),
-      DateTimeField(
-        format: format,
-        decoration: 
-        InputDecoration(
-          labelText: "Tanggal Kunjungan",
-          prefixIcon: Icon(Icons.calendar_today),
-        ),
-        onShowPicker: (context, currentValue) {
-          return showDatePicker(
-              context: context,
-              firstDate: DateTime(1900),
-              initialDate: currentValue ?? DateTime.now(),
-              lastDate: DateTime(2100));
-        },
-      ),
-    ]);
-  }
-}
-// end of datepicker
 
 
 class EditPage extends StatefulWidget {
