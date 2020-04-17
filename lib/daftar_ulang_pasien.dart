@@ -1,3 +1,6 @@
+// berisi rangka yang menghubungkan 2 file biodata dan form daftar ulang
+// top biodata dan form daftar ulang pasien
+
 import 'package:flutter/material.dart';
 import 'biodata.dart' as biodata;
 import 'form_daftar_ulang.dart' as formDaftarUlang;
@@ -33,13 +36,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         //warna background
         // backgroundColor: Colors.lightGreen,
          //judul
-         title: new Text("Tampilan Home "),
+         title: new Text("Daftar Ulang Pasien IRJ"),
            //bottom
            bottom: new TabBar(
              controller: controller,
              tabs: <Widget>[
-               new Tab(icon: new Icon(Icons.people),text: "Biodata"),
-               new Tab(icon: new Icon(Icons.note),text: "Daftar Ulang"),
+               new Tab(text: "Biodata"),
+               new Tab(text: "Daftar Ulang"),
              ],
         ),
       ),
@@ -47,7 +50,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         controller : controller,
         children: <Widget>[
             biodata.Biodata(),
-            formDaftarUlang.MyHomePage(),
+            formDaftarUlang.PasienForm(),
         ],
       ),
     );

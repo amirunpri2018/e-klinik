@@ -7,6 +7,8 @@ class Biodata extends StatelessWidget {
       child: new Center(
         child: Column(
           children: <Widget>[
+
+            // ini diisi dengan biodata pasien
             new Padding(padding: new EdgeInsets.all(20.0),),
             new Padding(padding: new EdgeInsets.all(20.0),),
             new Icon(Icons.phone_android,size: 90.0, color: Colors.lightBlueAccent,),

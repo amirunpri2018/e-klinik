@@ -1,22 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'dropdown_formfield.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'formulir_pasien.dart';
 import 'daftar_ulang_pasien.dart';
-// For changing the language
-// import 'package:flutter_localizations/flutter_localizations.dart';
-// import 'package:dropdown_formfield/dropdown_formfield.dart';
-// import 'package:flutter_cupertino_localizations/flutter_cupertino_localizations.dart';
-
-const appName = 'DAFTAR ULANG PASIEN IRJ';
 
 void main() => runApp(MaterialApp(
-      title: appName,
-      // home: MyHomePage()
-      // home:RegistrasiPasien(),
       home : RegistrasiPasien(),
 ));
 
@@ -28,19 +17,32 @@ class RegistrasiPasien extends StatefulWidget {
 
 class _RegistrasiPasienState extends State<RegistrasiPasien> {
   // final items = List<String>.generate(20, (i) => "Item ${i + 1}"); // list for swipe
+
+  // untuk list pasien
   final items = [
-    '10923821 Aldi Hadistian',
-    '12093812 Aldi Hadistian',
-    '12983091 Aldi Hadistian',
-    '12893721 Aldi Hadistian',
-    '10928302 Aldi Hadistian',
-    '12398192 Aldi Hadistian',
-    '10298320 Aldi Hadistian',
+    '10923821 - Nama Pasien',
+    '12093812 - Nama Pasien',
+    '12983091 - Nama Pasien',
+    '12893721 - Nama Pasien',
+    '10928302 - Nama Pasien',
+    '12398192 - Nama Pasien',
+    '10298320 - Nama Pasien',
 
   ];
 
+  // untuk dropdown no rm
+  List datasources = [
+      {
+        "display": "123456789",
+        "value": "123456789",
+      },
+      {
+        "display": "123456789",
+        "value": "123456789",
+      },
+    ];
+
   String _myActivity;
-  // String _myActivityResult;
   final formKey = new GlobalKey<FormState>();
   bool cetakKartu = false;
   bool tanpaBiayaAwal = false;
@@ -49,7 +51,6 @@ class _RegistrasiPasienState extends State<RegistrasiPasien> {
   void initState() {
     super.initState();
     _myActivity = '';
-    // _myActivityResult = '';
   }
 
   @override
@@ -57,6 +58,7 @@ class _RegistrasiPasienState extends State<RegistrasiPasien> {
     return Scaffold(
       appBar: AppBar(title: Text("Registrasi Pasien"),
       ),
+      // floating buttton onclick route to Form daftar Pasien
       floatingActionButton: FloatingActionButton(onPressed: (){
          Navigator.push(
           context,
@@ -67,9 +69,9 @@ class _RegistrasiPasienState extends State<RegistrasiPasien> {
         padding: EdgeInsets.all(24),
         children: <Widget>[
             Text('No RM'),
+            // dropdown pilih no RM
             DropDownFormField(
-                  // titleText: 'My workout',
-                  hintText: 'Please choose one',
+                  hintText: 'Pilih No RM',
                   value: _myActivity,
                   onSaved: (value) {
                     setState(() {
@@ -81,39 +83,11 @@ class _RegistrasiPasienState extends State<RegistrasiPasien> {
                       _myActivity = value;
                     });
                   },
-                  dataSource: [
-                    {
-                      "display": "Running",
-                      "value": "Running",
-                    },
-                    {
-                      "display": "Climbing",
-                      "value": "Climbing",
-                    },
-                    {
-                      "display": "Walking",
-                      "value": "Walking",
-                    },
-                    {
-                      "display": "Swimming",
-                      "value": "Swimming",
-                    },
-                    {
-                      "display": "Soccer Practice",
-                      "value": "Soccer Practice",
-                    },
-                    {
-                      "display": "Baseball Practice",
-                      "value": "Baseball Practice",
-                    },
-                    {
-                      "display": "Football Practice",
-                      "value": "Football Practice",
-                    },
-                  ],
+                  dataSource: datasources,
                   textField: 'display',
                   valueField: 'value',
                 ),
+                // Text field untuk cari Nomor RM
                  new Row(
                   children: <Widget>[
                     Expanded(
@@ -134,42 +108,16 @@ class _RegistrasiPasienState extends State<RegistrasiPasien> {
                     )
                   ]
                   ),
-                  // new Row(children: <Widget>[
-                  //   new Text('No. '),
-                  //   new Text('')
-                  // ],
+                  // hasil pasien dengan isi no rekam medik dengan nama
             ListView.builder(
               shrinkWrap: true, 
               physics: ClampingScrollPhysics(),
-              itemCount: 100,
+              itemCount: 20,
               itemBuilder: (context, index) {
                 return Slidable(
                   key: ValueKey(index),
                   actionPane: SlidableDrawerActionPane(),
-                  // actions: <Widget>[
-                  //   IconSlideAction(
-                  //     caption: 'Archive',
-                  //     color: Colors.blue,
-                  //     icon: Icons.archive,
-                  //   ),
-                  //   IconSlideAction(
-                  //     caption: 'Share',
-                  //     color: Colors.indigo,
-                  //     icon: Icons.share,
-                  //   ),
-                  // ],
                   secondaryActions: <Widget>[
-                    // IconSlideAction(
-                    //   caption: 'Edit',
-                    //   color: Colors.grey.shade200,
-                    //   icon: Icons.edit,
-                    //   onTap: (){
-                    //      Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(builder: (context) => Home()),
-                    //     );
-                    //   },
-                    // ),
                     IconSlideAction(
                       caption: 'Delete',
                       color: Colors.red,
@@ -196,26 +144,4 @@ class _RegistrasiPasienState extends State<RegistrasiPasien> {
     );
   }
 
-}
-
-
-
-
-
-class EditPage extends StatefulWidget {
-  @override
-  _EditPageState createState() => _EditPageState();
-}
-
-class _EditPageState extends State<EditPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Edit Data Pasien'),
-      ),
-      body: Column(children: <Widget>[
-        Text('EditData'),
-      ],),
-    );  
-  }
 }

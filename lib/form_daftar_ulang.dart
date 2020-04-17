@@ -1,380 +1,200 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'dropdown_formfield.dart';
+import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 
-class MyHomePage extends StatefulWidget {
-  @override
-  MyHomePageState createState() => MyHomePageState();
-}
+class FormulirPasienBloc extends FormBloc<String, String> {
 
-class MyHomePageState extends State<MyHomePage> {
-  int pilihOpsi;
-  String _myActivity;
-  // String _myActivityResult;
-  final formKey = new GlobalKey<FormState>();
-  bool cetakKartu = false;
-  bool tanpaBiayaAwal = false;
-
-  setPilihOpsi(int val) {
-    setState(() {
-      pilihOpsi = val;
-      
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _myActivity = '';
-    // _myActivityResult = '';
-  }
-  
-  final tab = new TabBar(
-    tabs: <Widget>[
-      new Tab(text: "Biodata",),
-      new Tab(text: "Daftar Ulang",),
-    ],
+ 
+ // Jenis Kunjungan
+  final jenisKunjungan = SelectFieldBloc(
+    name: 'Jenis Kunjungan',
+    items: ['Lama', 'Baru'],
   );
 
+  // TGL KUNJUNGAN
+  final tglKunjungan = InputFieldBloc<DateTime, Object>(
+    name: 'Tanggal Kunjungan',
+    toJson: (value) => value.toUtc().toIso8601String(),
+  );
+
+  // Cara Bayar
+  final caraBayar = SelectFieldBloc(
+      name: 'Cara Bayar',
+      items: ['Umum','Lain Lain'],
+  );
+  
+  // Tujuan Poliklinik
+  final poliTujuan = SelectFieldBloc(
+      name: 'Tujuan Poliklinik',
+      items: ['POLI UMUM','LAIN LAIN'],
+  );
+
+  // dokter
+  final dokter = SelectFieldBloc(
+      name: 'Dokter',
+      items: ['dr. XXX','LAIN LAIN'],
+  );
+
+  //kelas rawat
+  final kelasRawat = SelectFieldBloc(
+      name: 'Kelas Rawat',
+      items: ['I','II','III','IV'],
+  );
+
+  // Catatan
+  final catatan = TextFieldBloc(
+    name: 'Catatan',
+  );
+
+  final multiSelect1 = MultiSelectFieldBloc<String, dynamic>(
+    items: [
+      'Cetak Kartu',
+      'Tanpa Biaya Tambahan'
+    ]
+  );
+
+  FormulirPasienBloc() {
+    addFieldBlocs(
+      fieldBlocs: [
+        jenisKunjungan,
+        tglKunjungan,
+        caraBayar,
+        poliTujuan,
+        dokter,
+        kelasRawat,
+        catatan,
+        multiSelect1
+      ],
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: ListView(
-          padding: EdgeInsets.all(24),
-          children: <Widget>[
-              Text('Jenis Kunjungan'),
-              Row(children: <Widget>[
-                          Radio(
-                            value: 1,
-                            groupValue: pilihOpsi,
-                            activeColor: Colors.green,
-                            onChanged: (val) {
-                              print("Lama");
-                              setPilihOpsi(val);
-                            },
-                          ),
-                          Text('Lama'),
-                          Radio(
-                            value: 2,
-                            groupValue: pilihOpsi,
-                            activeColor: Colors.green,
-                            onChanged: (val) {
-                              print("Baru");
-                              setPilihOpsi(val);
-                            },
-                          ),
-                          Text('Baru')
-                    ],),
-              Text('Tgl Kunjungan'),
-              DateTimeForm(),
-              
-              Text('CARA BAYAR'),
-              // Dropdown
-              DropDownFormField(
-                  // titleText: 'My workout',
-                  hintText: 'Please choose one',
-                  value: _myActivity,
-                  onSaved: (value) {
-                    setState(() {
-                      _myActivity = value;
-                    });
-                  },
-                  onChanged: (value) {
-                    setState(() {
-                      _myActivity = value;
-                    });
-                  },
-                  dataSource: [
-                    {
-                      "display": "Running",
-                      "value": "Running",
-                    },
-                    {
-                      "display": "Climbing",
-                      "value": "Climbing",
-                    },
-                    {
-                      "display": "Walking",
-                      "value": "Walking",
-                    },
-                    {
-                      "display": "Swimming",
-                      "value": "Swimming",
-                    },
-                    {
-                      "display": "Soccer Practice",
-                      "value": "Soccer Practice",
-                    },
-                    {
-                      "display": "Baseball Practice",
-                      "value": "Baseball Practice",
-                    },
-                    {
-                      "display": "Football Practice",
-                      "value": "Football Practice",
-                    },
-                  ],
-                  textField: 'display',
-                  valueField: 'value',
-                ),
+  void onSubmitting() async {
+    
 
-              Text('TUJUAN POLIKLINIK'),
-              // Dropdown
-              DropDownFormField(
-                  // titleText: 'My workout',
-                  hintText: 'Please choose one',
-                  value: _myActivity,
-                  onSaved: (value) {
-                    setState(() {
-                      _myActivity = value;
-                    });
-                  },
-                  onChanged: (value) {
-                    setState(() {
-                      _myActivity = value;
-                    });
-                  },
-                  dataSource: [
-                    {
-                      "display": "Running",
-                      "value": "Running",
-                    },
-                    {
-                      "display": "Climbing",
-                      "value": "Climbing",
-                    },
-                    {
-                      "display": "Walking",
-                      "value": "Walking",
-                    },
-                    {
-                      "display": "Swimming",
-                      "value": "Swimming",
-                    },
-                    {
-                      "display": "Soccer Practice",
-                      "value": "Soccer Practice",
-                    },
-                    {
-                      "display": "Baseball Practice",
-                      "value": "Baseball Practice",
-                    },
-                    {
-                      "display": "Football Practice",
-                      "value": "Football Practice",
-                    },
-                  ],
-                  textField: 'display',
-                  valueField: 'value',
-                ),
+    try {
+      await Future<void>.delayed(Duration(milliseconds: 500));
 
-              Text('DOKTER'),
-              // Dropdown
-              DropDownFormField(
-                  // titleText: 'My workout',
-                  hintText: 'Please choose one',
-                  value: _myActivity,
-                  onSaved: (value) {
-                    setState(() {
-                      _myActivity = value;
-                    });
-                  },
-                  onChanged: (value) {
-                    setState(() {
-                      _myActivity = value;
-                    });
-                  },
-                  dataSource: [
-                    {
-                      "display": "Running",
-                      "value": "Running",
-                    },
-                    {
-                      "display": "Climbing",
-                      "value": "Climbing",
-                    },
-                    {
-                      "display": "Walking",
-                      "value": "Walking",
-                    },
-                    {
-                      "display": "Swimming",
-                      "value": "Swimming",
-                    },
-                    {
-                      "display": "Soccer Practice",
-                      "value": "Soccer Practice",
-                    },
-                    {
-                      "display": "Baseball Practice",
-                      "value": "Baseball Practice",
-                    },
-                    {
-                      "display": "Football Practice",
-                      "value": "Football Practice",
-                    },
-                  ],
-                  textField: 'display',
-                  valueField: 'value',
-                ),
-              Text('KELAS RAWAT'),
-              // Dropdown
-              DropDownFormField(
-                  // titleText: 'My workout',
-                  hintText: 'Please choose one',
-                  value: _myActivity,
-                  onSaved: (value) {
-                    setState(() {
-                      _myActivity = value;
-                    });
-                  },
-                  onChanged: (value) {
-                    setState(() {
-                      _myActivity = value;
-                    });
-                  },
-                  dataSource: [
-                    {
-                      "display": "Running",
-                      "value": "Running",
-                    },
-                    {
-                      "display": "Climbing",
-                      "value": "Climbing",
-                    },
-                    {
-                      "display": "Walking",
-                      "value": "Walking",
-                    },
-                    {
-                      "display": "Swimming",
-                      "value": "Swimming",
-                    },
-                    {
-                      "display": "Soccer Practice",
-                      "value": "Soccer Practice",
-                    },
-                    {
-                      "display": "Baseball Practice",
-                      "value": "Baseball Practice",
-                    },
-                    {
-                      "display": "Football Practice",
-                      "value": "Football Practice",
-                    },
-                  ],
-                  textField: 'display',
-                  valueField: 'value',
-                ),
-                Text('CATATAN'),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Catatan'
-                  ),
-                ),
-                Row(children: <Widget>[
-                   Checkbox(
-                    value: cetakKartu,
-                    onChanged: (bool value) {
-                        setState(() {
-                            cetakKartu = value;
-                        });
-                    },
-                ),
-                Text('Cetak Kartu')
-                ],),
-                 Row(children: <Widget>[
-                   Checkbox(
-                    value: tanpaBiayaAwal,
-                    onChanged: (bool value) {
-                        setState(() {
-                            tanpaBiayaAwal = value;
-                        });
-                    },
-                ),
-                Text('Tanpa Biaya Awal *)')
-                ],),
-                Text('* Hanya Untuk Pasien yang tidak terkena biaya seperti Buka Jahitan'),
-                Row(children: <Widget>[
-                new Container(
-                  margin: const EdgeInsets.only(top:15.0,right: 10.0),
-                  child:
-                      RaisedButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'Reset',
-                          style: TextStyle(fontSize: 20)
-                        ),
-                      ),
-                  
-                ),
-               new Container(
-                  margin: const EdgeInsets.only(top:15.0,right: 10.0),
-                  child:
-                      RaisedButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'Simpan',
-                          style: TextStyle(fontSize: 20)
-                        ),
-                      ),
-                  
-                ),
-
-                ],)
-          ],
-        ));
+      emitSuccess();
+    } catch (e) {
+      emitFailure();
+    }
   }
 }
 
-// Date Picker
-class DateTimeForm extends StatefulWidget {
-  @override
-  _DateTimeFormState createState() => _DateTimeFormState();
-}
-
-
-class _DateTimeFormState extends State<DateTimeForm> {
-  final formKey = GlobalKey<FormState>();
+class PasienForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          BasicDateField(),
-          SizedBox(height: 24),
-        ],
+    return BlocProvider(
+      create: (context) => FormulirPasienBloc(),
+      child: Builder(
+        builder: (context) {
+          final formBloc = context.bloc<FormulirPasienBloc>();
+
+          return Theme(
+            data: Theme.of(context).copyWith(
+              inputDecorationTheme: InputDecorationTheme(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            ),
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              body: 
+              FormBlocListener<FormulirPasienBloc, String, String>(
+                child: SingleChildScrollView(
+                  physics: ClampingScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        RadioButtonGroupFieldBlocBuilder<String>(
+                          selectFieldBloc: formBloc.jenisKunjungan,
+                          itemBuilder: (context, value) =>
+                              value[0].toUpperCase() + value.substring(1),
+                          decoration: InputDecoration(
+                            labelText: 'Jenis Kunjungan',
+                            prefixIcon: SizedBox(),
+                          ),
+                        ),
+
+                        // tgl kunjungan
+                        DateTimeFieldBlocBuilder(
+                          dateTimeFieldBloc: formBloc.tglKunjungan,
+                          format: DateFormat('dd-mm-yyyy'),
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(1900),
+                          lastDate: DateTime(2100),
+                          decoration: InputDecoration(
+                            labelText: 'Tanggal Kunjungan',jyth
+                            prefixIcon: Icon(Icons.calendar_today),
+                          ),
+                        ),
+
+                        //dropdown
+                         DropdownFieldBlocBuilder<String>(
+                          selectFieldBloc: formBloc.caraBayar,
+                          decoration: InputDecoration(
+                            labelText: 'Cara Bayar',
+                            // prefixIcon: Icon(Icons.book),
+                          ),
+                          itemBuilder: (context, value) => value,
+                        ),
+
+                         //dropdown
+                         DropdownFieldBlocBuilder<String>(
+                          selectFieldBloc: formBloc.poliTujuan,
+                          decoration: InputDecoration(
+                            labelText: 'Poli Tujuan',
+                            // prefixIcon: Icon(Icons.book),
+                          ),
+                          itemBuilder: (context, value) => value,
+                        ),
+
+                        DropdownFieldBlocBuilder<String>(
+                          selectFieldBloc: formBloc.dokter,
+                          decoration: InputDecoration(
+                            labelText: 'Dokter',
+                            prefixIcon: Icon(Icons.perm_identity),
+                          ),
+                          itemBuilder: (context, value) => value,
+                        ),
+
+                        DropdownFieldBlocBuilder<String>(
+                          selectFieldBloc: formBloc.kelasRawat,
+                          decoration: InputDecoration(
+                            labelText: 'Kelas Rawat',
+                            prefixIcon: Icon(Icons.perm_identity),
+                          ),
+                          itemBuilder: (context, value) => value,
+                        ),
+
+                        TextFieldBlocBuilder(
+                          textFieldBloc: formBloc.catatan,
+                          keyboardType: TextInputType.emailAddress,
+                          maxLines: 4,
+                          decoration: InputDecoration(
+                            labelText: 'Alamat Lengkap',
+                            // prefixIcon: Icon(Icons.place),
+                          ),
+                        ),
+
+                        CheckboxGroupFieldBlocBuilder<String>(
+                          multiSelectFieldBloc: formBloc.multiSelect1,
+                          itemBuilder: (context,item) => item,
+                          decoration: InputDecoration(
+                            labelText: 'Checkbox',
+                          ),
+                        ) ,      
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 }
-
-class BasicDateField extends StatelessWidget {
-  final format = DateFormat("yyyy-MM-dd");
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      // Text('Basic date field (${format.pattern})',textAlign: TextAlign.right,),
-      DateTimeField(
-        format: format,
-        decoration: 
-        InputDecoration(
-          labelText: "Tanggal Kunjungan",
-          prefixIcon: Icon(Icons.calendar_today),
-        ),
-        onShowPicker: (context, currentValue) {
-          return showDatePicker(
-              context: context,
-              firstDate: DateTime(1900),
-              initialDate: currentValue ?? DateTime.now(),
-              lastDate: DateTime(2100));
-        },
-      ),
-    ]);
-  }
-}
-// end of datepicker
