@@ -50,7 +50,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         controller : controller,
         children: <Widget>[
             biodata.Biodata(),
-            formDaftarUlang.PasienForm(),
+            formDaftarUlang.DaftarUlangForm(),
         ],
       ),
     );

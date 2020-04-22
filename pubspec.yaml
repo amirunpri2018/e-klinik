@@ -25,10 +25,10 @@ dependencies:
   cupertino_icons: ^0.1.2
   flutter_form_bloc: ^0.12.1
   datetime_picker_formfield: ^1.0.0
-  # dropdown_formfield: ^0.1.1
-  # intl_translation: ^0.16.1 
   intl: ^0.16.1
   flutter_slidable: "^0.5.4"
+  flutter_speed_dial: ^1.2.5
+  infinite_listview: ^1.0.1+1
 
 
   # flutter_localizations:

@@ -1,0 +1,473 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'dropdown_formfield.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'formulir_pasien.dart';
+import 'daftar_ulang_pasien.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter/rendering.dart';
+
+void main() => runApp(MaterialApp(
+      home : RegistrasiPasien(),
+));
+
+// Registrasi Pasien
+class RegistrasiPasien extends StatefulWidget {
+  @override
+  _RegistrasiPasienState createState() => _RegistrasiPasienState();
+}
+
+class _RegistrasiPasienState extends State<RegistrasiPasien> {
+  // final items = List<String>.generate(20, (i) => "Item ${i + 1}"); // list for swipe
+
+  // untuk list pasien
+  final items = [
+    '10923821 - Nama Pasien',
+    '12093812 - Nama Pasien',
+    '12983091 - Nama Pasien',
+    '12893721 - Nama Pasien',
+    '10928302 - Nama Pasien',
+    '12398192 - Nama Pasien',
+    '10298320 - Nama Pasien',
+
+  ];
+
+  // untuk dropdown no rm
+  List datasources = [
+      {
+        "display": "123456789",
+        "value": "123456789",
+      },
+      {
+        "display": "123456789",
+        "value": "123456789",
+      },
+    ];
+
+  String _myActivity;
+  final formKey = new GlobalKey<FormState>();
+  bool cetakKartu = false;
+  bool tanpaBiayaAwal = false;
+  ScrollController scrollController;
+  bool dialVisible = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _myActivity = '';
+
+    scrollController = ScrollController()
+      ..addListener(() {
+        setDialVisible(scrollController.position.userScrollDirection ==
+            ScrollDirection.forward);
+    });
+  }
+
+  void setDialVisible(bool value) {
+    setState(() {
+      dialVisible = value;
+    });
+  }
+
+   SpeedDial buildSpeedDial() {
+    return SpeedDial(
+      animatedIcon: AnimatedIcons.menu_close,
+      animatedIconTheme: IconThemeData(size: 22.0),
+      // child: Icon(Icons.add),
+      onOpen: () => print('OPENING DIAL'),
+      onClose: () => print('DIAL CLOSED'),
+      visible: dialVisible,
+      curve: Curves.bounceIn,
+      children: [
+        // SpeedDialChild(
+        //   child: Icon(Icons.assignment_turned_in, color: Colors.white),
+        //   backgroundColor: Colors.green,
+        //   onTap: (){
+           
+        //   },
+        //   label: 'Daftar Ulang',
+        //   labelStyle: TextStyle(fontWeight: FontWeight.w500),
+        //   labelBackgroundColor: Colors.deepOrangeAccent,
+        // ),
+        SpeedDialChild(
+          child: Icon(Icons.assignment_turned_in, color: Colors.white),
+          backgroundColor: Colors.green,
+          onTap: (){
+             Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PasienForm()),
+            );
+          },
+          label: 'Registrasi Pasien Baru',
+          labelStyle: TextStyle(fontWeight: FontWeight.w500),
+          labelBackgroundColor: Colors.green,
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Registrasi Pasien"),
+      ),
+      // floating buttton onclick route to Form daftar Pasien
+      floatingActionButton: 
+      // FloatingActionButton(onPressed: (){
+      //    Navigator.push(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => PasienForm()),
+      //   );
+      // },
+      // child: Icon(Icons.add),
+      // ),
+      buildSpeedDial(),
+      body: ListView(
+        padding: EdgeInsets.all(24),
+        children: <Widget>[ 
+            Text('No RM'),
+            // dropdown pilih no RM
+            DropDownFormField(
+                  hintText: 'Pilih No RM',
+                  value: _myActivity,
+                  onSaved: (value) {
+                    setState(() {
+                      _myActivity = value;
+                    });
+                  },
+                  onChanged: (value) {
+                    setState(() {
+                      _myActivity = value;
+                    });
+                  },
+                  dataSource: datasources,
+                  textField: 'display',
+                  valueField: 'value',
+                ),
+                // Text field untuk cari Nomor RM
+                 new Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Cari Nomor RM'
+                        ),
+                        style: new TextStyle(
+                        color: const Color(0xFF000000),
+                        fontWeight: FontWeight.w200,
+                        fontFamily: "Roboto"),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () {
+                      },
+                    )
+                  ]
+                  ),
+                  // hasil pasien dengan isi no rekam medik dengan nama
+            ListView.builder(
+              shrinkWrap: true, 
+              physics: ClampingScrollPhysics(),
+              itemCount: 20,
+              itemBuilder: (context, index) {
+                return Slidable(
+                  key: ValueKey(index),
+                  actionPane: SlidableDrawerActionPane(),
+                  secondaryActions: <Widget>[
+                    IconSlideAction(
+                      caption: 'Delete',
+                      color: Colors.red,
+                      icon: Icons.delete,
+                    ),
+                  ],
+                  dismissal: SlidableDismissal(
+                    child: SlidableDrawerDismissal(),
+                  ),
+                  child: ListTile(
+                    title: Text('$index'),
+                    onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Home()),
+                        );
+                    },
+                  ),
+                );
+              },
+            ),
+        ],
+      )
+    );
+  }
+
+}
+// import 'package:flutter/material.dart';
+// import 'package:flutter_form_bloc/flutter_form_bloc.dart';
+
+// void main() => runApp(App());
+
+// class App extends StatelessWidget {
+//   const App({Key key}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: AllFieldsForm(),
+//     );
+//   }
+// }
+
+// class AllFieldsFormBloc extends FormBloc<String, String> {
+
+//   ScrollController scrollController;
+//   bool dialVisible = true;
+
+//   final text1 = TextFieldBloc();
+
+//   final boolean1 = BooleanFieldBloc();
+
+//   final boolean2 = BooleanFieldBloc();
+
+//   final select1 = SelectFieldBloc(
+//     items: ['Option 1', 'Option 2'],
+//   );
+
+//   final select2 = SelectFieldBloc(
+//     items: ['Option 1', 'Option 2'],
+//   );
+
+//   final multiSelect1 = MultiSelectFieldBloc<String, dynamic>(
+//     items: [
+//       'Option 1',
+//       'Option 2',
+//     ],
+//   );
+
+//   final date1 = InputFieldBloc<DateTime, Object>();
+
+//   final dateAndTime1 = InputFieldBloc<DateTime, Object>();
+
+//   final time1 = InputFieldBloc<TimeOfDay, Object>();
+  
+
+//   AllFieldsFormBloc() {
+//     addFieldBlocs(fieldBlocs: [
+//       text1,
+//       boolean1,
+//       boolean2,
+//       select1,
+//       select2,
+//       multiSelect1,
+//       date1,
+//       dateAndTime1,
+//       time1,
+//     ]);
+//   }
+
+//    @override
+//   void initState() {
+//     super.initState();
+//     _myActivity = '';
+
+//     scrollController = ScrollController()
+//       ..addListener(() {
+//         setDialVisible(scrollController.position.userScrollDirection ==
+//             ScrollDirection.forward);
+//     });
+//   }
+
+//   void setDialVisible(bool value) {
+//     setState(() {
+//       dialVisible = value;
+//     });
+//   }
+
+//    SpeedDial buildSpeedDial() {
+//     return SpeedDial(
+//       animatedIcon: AnimatedIcons.menu_close,
+//       animatedIconTheme: IconThemeData(size: 22.0),
+//       // child: Icon(Icons.add),
+//       onOpen: () => print('OPENING DIAL'),
+//       onClose: () => print('DIAL CLOSED'),
+//       visible: dialVisible,
+//       curve: Curves.bounceIn,
+//       children: [
+//         // SpeedDialChild(
+//         //   child: Icon(Icons.assignment_turned_in, color: Colors.white),
+//         //   backgroundColor: Colors.green,
+//         //   onTap: (){
+           
+//         //   },
+//         //   label: 'Daftar Ulang',
+//         //   labelStyle: TextStyle(fontWeight: FontWeight.w500),
+//         //   labelBackgroundColor: Colors.deepOrangeAccent,
+//         // ),
+//         SpeedDialChild(
+//           child: Icon(Icons.assignment_turned_in, color: Colors.white),
+//           backgroundColor: Colors.green,
+//           onTap: (){
+//              Navigator.push(
+//               context,
+//               MaterialPageRoute(builder: (context) => PasienForm()),
+//             );
+//           },
+//           label: 'Registrasi Pasien Baru',
+//           labelStyle: TextStyle(fontWeight: FontWeight.w500),
+//           labelBackgroundColor: Colors.green,
+//         ),
+//       ],
+//     );
+//   }
+
+//   @override
+//   void onSubmitting() async {
+//     try {
+//       await Future<void>.delayed(Duration(milliseconds: 500));
+
+//       emitSuccess(canSubmitAgain: true);
+//     } catch (e) {
+//       emitFailure();
+//     }
+//   }
+// }
+
+// class AllFieldsForm extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocProvider(
+//       create: (context) => AllFieldsFormBloc(),
+//       child: Builder(
+//         builder: (context) {
+//           final formBloc = BlocProvider.of<AllFieldsFormBloc>(context);
+
+//           return Theme(
+//             data: Theme.of(context).copyWith(
+//               inputDecorationTheme: InputDecorationTheme(
+//                 border: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(20),
+//                 ),
+//               ),
+//             ),
+//             child: Scaffold(
+//               appBar: AppBar(title: Text('Registrasi Pasien')),
+//               body: FormBlocListener<AllFieldsFormBloc, String, String>(
+//                 onSubmitting: (context, state) {
+//                   LoadingDialog.show(context);
+//                 },
+//                 onSuccess: (context, state) {
+//                   LoadingDialog.hide(context);
+
+//                   Navigator.of(context).pushReplacement(
+//                       MaterialPageRoute(builder: (_) => SuccessScreen()));
+//                 },
+//                 onFailure: (context, state) {
+//                   LoadingDialog.hide(context);
+
+//                   Scaffold.of(context).showSnackBar(
+//                       SnackBar(content: Text(state.failureResponse)));
+//                 },
+//                 child: SingleChildScrollView(
+//                   physics: ClampingScrollPhysics(),
+//                   child: Padding(
+//                     padding: const EdgeInsets.all(8.0),
+//                     child: Column(
+//                       children: <Widget>[
+//                         DropdownFieldBlocBuilder<String>(
+//                           selectFieldBloc: formBloc.select1,
+//                           decoration: InputDecoration(
+//                             labelText: 'Pilih No RM',
+//                             prefixIcon: Icon(Icons.assignment_turned_in)
+//                           ),
+//                           itemBuilder: (context, value) => value,
+//                         ),
+//                         TextFieldBlocBuilder(
+//                           textFieldBloc: formBloc.text1,
+//                           keyboardType: TextInputType.emailAddress,
+//                           // suffixButton: SuffixButton.asyncValidating,
+//                           decoration: InputDecoration(
+//                             labelText: 'Cari No RM',
+//                             // prefixIcon: Icon(Icons.search),
+//                             suffixIcon: IconButton(
+//                               icon:Icon(Icons.search),
+//                               onPressed: (){
+
+//                               },
+//                             )
+//                             // prefixIcon: Icon(Icons.text_fields),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
+
+// class LoadingDialog extends StatelessWidget {
+//   static void show(BuildContext context, {Key key}) => showDialog<void>(
+//         context: context,
+//         useRootNavigator: false,
+//         barrierDismissible: false,
+//         builder: (_) => LoadingDialog(key: key),
+//       ).then((_) => FocusScope.of(context).requestFocus(FocusNode()));
+
+//   static void hide(BuildContext context) => Navigator.pop(context);
+
+//   LoadingDialog({Key key}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return WillPopScope(
+//       onWillPop: () async => false,
+//       child: Center(
+//         child: Card(
+//           child: Container(
+//             width: 80,
+//             height: 80,
+//             padding: EdgeInsets.all(12.0),
+//             child: CircularProgressIndicator(),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class SuccessScreen extends StatelessWidget {
+//   SuccessScreen({Key key}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: <Widget>[
+//             Icon(Icons.tag_faces, size: 100),
+//             SizedBox(height: 10),
+//             Text(
+//               'Success',
+//               style: TextStyle(fontSize: 54, color: Colors.black),
+//               textAlign: TextAlign.center,
+//             ),
+//             SizedBox(height: 10),
+//             RaisedButton.icon(
+//               onPressed: () => Navigator.of(context).pushReplacement(
+//                   MaterialPageRoute(builder: (_) => AllFieldsForm())),
+//               icon: Icon(Icons.replay),
+//               label: Text('AGAIN'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
